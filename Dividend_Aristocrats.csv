@@ -1,0 +1,67 @@
+Ticker,Name,Sector,Industry,Dividend Yield,Dividend Safety
+MMM,3M Company,Industrials,Industrial Conglomerates,4.07,75
+ABT,Abbott Laboratories,Healthcare,Health Care Equipment,1.76,71
+ABBV,AbbVie,Healthcare,Biotechnology,6.26,50
+AFL,Aflac Incorporated,Financials,Life and Health Insurance,3.14,99
+APD,Air Products and Chemicals,Materials,Industrial Gases,2.65,95
+ALB,Albemarle Corporation,Materials,Specialty Chemicals,2.70,99
+MO,Altria Group,Consumer Staples,Tobacco,8.73,55
+AMCR,Amcor plc,Materials,Paper Packaging,5.66,50
+AOS,A. O. Smith Corporation,Industrials,Building Products,2.42,99
+ADM,Archer-Daniels-Midland Company,Consumer Staples,Agricultural Products,4.00,94
+ATO,Atmos Energy Corporation,Utilities,Gas Utilities,2.34,97
+T,AT&T,Communications,Integrated Telecommunication Services,6.91,65
+ADP,Automatic Data Processing,Information Technology,Data Processing and Outsourced Services,2.66,97
+BDX,"Becton, Dickinson and Company",Healthcare,Health Care Equipment,1.33,91
+BF.B,Brown-Forman Corporation,Consumer Staples,Distillers and Vintners,1.19,99
+CAH,Cardinal Health,Healthcare,Health Care Distributors,4.02,74
+CAT,Caterpillar,Industrials,Construction Machinery and Heavy Trucks,3.38,93
+CVX,Chevron Corporation,Energy,Integrated Oil and Gas,6.38,65
+CB,Chubb Limited,Financials,Property and Casualty Insurance,2.68,99
+CINF,Cincinnati Financial Corporation,Financials,Property and Casualty Insurance,3.00,71
+CTAS,Cintas Corporation,Industrials,Diversified Support Services,1.37,97
+CLX,Clorox Company,Consumer Staples,Household Products,2.34,75
+KO,Coca-Cola Company,Consumer Staples,Soft Drinks,3.53,80
+CL,Colgate-Palmolive Company,Consumer Staples,Household Products,2.55,90
+ED,Consolidated Edison,Utilities,Multi-Utilities,3.83,90
+DOV,Dover Corporation,Industrials,Industrial Machinery,2.29,89
+ECL,Ecolab,Materials,Specialty Chemicals,1.18,98
+EMR,Emerson Electric Co.,Industrials,Electrical Components and Equipment,3.98,78
+ESS,Essex Property Trust,Real Estate,Residential REITs,3.87,93
+EXPD,Expeditors International of Washington,Industrials,Air Freight and Logistics,1.41,99
+XOM,Exxon Mobil Corporation,Energy,Integrated Oil and Gas,8.44,55
+FRT,Federal Realty Investment Trust,Real Estate,Retail REITs,5.57,88
+BEN,Franklin Resources,Financials,Asset Management and Custody Banks,6.49,98
+GD,General Dynamics Corporation,Industrials,Aerospace and Defense,3.27,97
+GPC,Genuine Parts Company,Consumer Discretionary,Distributors,4.56,72
+HRL,Hormel Foods Corporation,Consumer Staples,Packaged Foods and Meats,1.94,99
+ITW,Illinois Tool Works,Industrials,Industrial Machinery,2.81,81
+JNJ,Johnson & Johnson,Healthcare,Pharmaceuticals,2.76,99
+KMB,Kimberly-Clark Corporation,Consumer Staples,Household Products,3.26,88
+LEG,Leggett & Platt,Consumer Discretionary,Home Furnishings,6.02,61
+LIN,Linde,Materials,Industrial Gases,2.14,99
+LOW,Lowe's Companies,Consumer Discretionary,Home Improvement Retail,2.42,93
+MKC,McCormick & Company,Consumer Staples,Packaged Foods and Meats,1.65,80
+MCD,McDonald's,Consumer Discretionary,Restaurants,2.85,77
+MDT,Medtronic plc,Healthcare,Health Care Equipment,2.29,99
+NUE,Nucor Corporation,Materials,Steel,4.31,90
+PH,Parker-Hannifin Corporation,Industrials,Industrial Machinery,2.66,94
+PNR,Pentair plc,Industrials,Industrial Machinery,2.43,89
+PBCT,People's United Financial,Financials,Regional Banks,6.67,79
+PEP,PepsiCo,Consumer Staples,Soft Drinks,2.93,93
+PPG,PPG Industries,Materials,Specialty Chemicals,2.24,93
+PG,Procter & Gamble Company,Consumer Staples,Household Products,2.65,99
+RTX,Raytheon Technologies Corporation,Industrials,Aerospace and Defense,5.09,96
+O,Realty Income Corporation,Real Estate,Retail REITs,5.67,86
+ROP,Roper Technologies,Industrials,Industrial Conglomerates,0.67,98
+ROST,Ross Stores,Consumer Discretionary,Apparel Retail,1.34,60
+SHW,Sherwin-Williams Company,Materials,Specialty Chemicals,1.16,87
+SPGI,S&P Global,Financials,Financial Exchanges and Data,1.05,99
+SWK,Stanley Black & Decker,Industrials,Industrial Machinery,2.57,90
+SYY,Sysco Corporation,Consumer Staples,Food Distributors,3.91,55
+TGT,Target Corporation,Consumer Discretionary,General Merchandise Stores,2.69,74
+TROW,T. Rowe Price Group,Financials,Asset Management and Custody Banks,3.53,94
+VFC,V.F. Corporation,Consumer Discretionary,"Apparel, Accessories and Luxury Goods",3.41,60
+WBA,Walgreens Boots Alliance,Consumer Staples,Drug Retail,4.27,79
+WMT,Walmart,Consumer Staples,Hypermarkets and Super Centers,1.77,78
+GWW,W.W. Grainger,Industrials,Trading Companies and Distributors,2.23,99

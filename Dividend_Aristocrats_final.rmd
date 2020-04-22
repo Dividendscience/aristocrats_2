@@ -1,0 +1,202 @@
+---
+title: "Dividend_aristocrats_final"
+date: "4/21/2020"
+output: html_document
+---
+
+```{R}
+library(tidyverse)
+library(tidyquant)
+library(riingo)
+```
+
+```{r eval = FALSE, echo = FALSE}
+data<-read.csv("Dividend_Aristocrats.csv")
+
+
+DA_tickers<-data %>% pull(Ticker)
+DA_tickers<-as.character(DA_tickers)
+
+DA_tickers<-replace(DA_tickers, DA_tickers=="BF.B", "BF-B")
+
+DA_tickers_noAMCR<-DA_tickers[!DA_tickers %in% "AMCR"]
+```
+
+Since we got all the tickers, we can pull the data from Tiingo
+
+```{R eval = FALSE, echo = FALSE}
+DA_noAMC <- 
+  DA_tickers_noAMCR%>% 
+  riingo_prices(start_date = "2019-01-01", end_date = "2020-4-15") %>% 
+  arrange(ticker) %>% 
+  mutate(date = ymd(date))
+
+```
+
+```{R eval = FALSE, echo = FALSE}
+saveRDS(DA_noAMC, file="DA_noAMC.rds")
+```
+
+```{R}
+DA_noAMC_working<-readRDS("DA_noAMC.rds")
+```
+
+Since we got the data, we can go ahead and do some analysis. First, we need to aggregate the dividend total by year. Note that, the 2020 is still going on, and thus it would be make sense to just use 2019 to calcualte the annual dividends. Also, I will further calculate the 2019 and 2020 return, and thus it makes sense to separate the data into 2 years. 
+
+```{R}
+DA_noAMC_working_2019<-DA_noAMC_working %>% filter(date<=as.Date("2020-01-01"))
+DA_noAMC_working_2020<-DA_noAMC_working %>% filter(date>as.Date("2020-01-01"))
+
+# Check whether they worked as intended
+tail(DA_noAMC_working_2019)
+head(DA_noAMC_working_2020)
+```
+
+# 2019
+
+Aggregate the dividends in the year of 2019.
+
+```{R}
+DA_noAMC_working_2019_Dividends<-DA_noAMC_working_2019 %>% group_by(ticker) %>% 
+  mutate(div_total = sum(divCash)) %>%
+  arrange(ticker) %>% mutate(div_yield = div_total/close) 
+```
+
+The following calculate the dividends and returns.
+```{R}
+Dividend_2019<-aggregate(DA_noAMC_working_2019_Dividends[, "div_yield"],by= list(DA_noAMC_working_2019_Dividends$ticker), mean) 
+
+colnames(Dividend_2019)<-c("ticker","div_yield_av")
+Dividend_2019<-Dividend_2019 %>% arrange(ticker)
+
+Starting_2019<-select(filter(DA_noAMC_working_2019_Dividends,date=="2019-01-02"),ticker,close) %>% arrange(ticker)
+Ending_2019<-select(filter(DA_noAMC_working_2019_Dividends,date=="2019-12-31"),ticker,close)%>% arrange(ticker)
+
+
+Return_price_app<-(Ending_2019$close-Starting_2019$close)/Starting_2019$close
+Return_price_app<-as.data.frame(Return_price_app)
+
+Aristocrats_2019_final<-bind_cols(Dividend_2019,Return_price_app)
+```
+
+```{R}
+library(ggrepel)
+
+ggplot(Aristocrats_2019_final, aes(x = Return_price_app, y = div_yield_av,color = ticker)) + 
+  geom_point()+ 
+  scale_y_continuous(labels = scales::percent,breaks = scales::pretty_breaks(n = 10))  +
+  scale_x_continuous(labels = scales::percent,breaks = scales::pretty_breaks(n = 15)) +
+  labs(x = "Price Appreciation", y = "Dividend Yield", title = "2019 Dividend Yield versus Price Appreciation")+
+  theme_classic()+geom_text_repel(aes(label = ticker), vjust = 0, nudge_y = 0.002) +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) 
+ 
+```
+
+
+
+The next is to calculate the total return, including dividends and price appreciation. 
+
+```{R}
+DA_noAMC_working_2019_Dividends_1strow<-DA_noAMC_working_2019_Dividends %>% group_by(ticker) %>% slice(1) %>% arrange(ticker) 
+
+
+Return_total_2019<-(Ending_2019$close-Starting_2019$close+DA_noAMC_working_2019_Dividends_1strow$div_total)/Starting_2019$close
+Return_total_2019<-as.data.frame(Return_total_2019)
+
+Aristocrats_2019_final<-bind_cols(Aristocrats_2019_final,Return_total_2019)
+
+Aristocrats_2019_final<-Aristocrats_2019_final %>% arrange(desc(Return_total_2019))
+```
+
+
+```{R}
+ggplot(Aristocrats_2019_final,aes(x = reorder(ticker, Return_total_2019), y = Return_total_2019, fill = ticker)) +
+  geom_col(width = .5) +
+  theme(legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")) +
+  labs(x = "", y = "Total Return",title = "2019 Dividend Aristocrats Total Return: Dividends + Price Appreciation") +
+  scale_y_continuous(labels = scales::percent,breaks = scales::pretty_breaks(n = 10)) +
+  geom_label_repel(aes(ticker, Return_total_2019,label = ticker), data=Aristocrats_2019_final[Aristocrats_2019_final$Return_total_2019>0.3104,],arrow = arrow(length = unit(0.01, "npc"), type = "closed", ends = "first"))+
+  geom_hline(yintercept = 0.3104,color = "blue", size=1)+
+  annotate("text", x = 13, y = 0.35, label = "Return of SP500 (VOO)")
+
+```
+
+```{R}
+ggplot(Aristocrats_2019_final,aes(x = reorder(ticker, Return_total_2019), y = Return_total_2019, fill = ticker)) +
+  geom_col(width = .5) +
+  theme(legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")) +
+  labs(x = "", y = "Total Return",title = "2019 Dividend Aristocrats Total Return: Dividends + Price Appreciation") +
+  scale_y_continuous(labels = scales::percent,breaks = scales::pretty_breaks(n = 10)) +
+  geom_label_repel(aes(ticker, Return_total_2019,label = ticker), arrow = arrow(length = unit(0.01, "npc"), type = "closed", ends = "first"))+
+  geom_hline(yintercept = 0.3104,color = "blue", size=1)
+
+```
+
+# 2020
+
+```{R}
+
+Starting_2020<-select(filter(DA_noAMC_working_2020,date=="2020-01-02"),ticker,close) %>% arrange(ticker)
+Ending_2020<-select(filter(DA_noAMC_working_2020,date=="2020-04-15"),ticker,close)%>% arrange(ticker)
+
+Return_price_app_2020<-(Ending_2020$close-Starting_2020$close)/Starting_2020$close
+Return_price_app_2020<-as.data.frame(Return_price_app_2020)
+
+Aristocrats_2020_final<-cbind(Dividend_2019$ticker,Return_price_app_2020)
+Aristocrats_2020_final<-Aristocrats_2020_final %>% arrange(desc(Return_price_app_2020))
+
+colnames(Aristocrats_2020_final) <-c("ticker","Return_price_app_2020")
+```
+
+
+```{R}
+ggplot(Aristocrats_2020_final,aes(x = reorder(ticker, Return_price_app_2020), y = Return_price_app_2020, fill = ticker)) +
+  geom_col(width = .5) +
+  theme(legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")) +
+  labs(x = "", y = "Price Appreciation",title = "2020 (Jan. 02 - Apr. 15) Dividend Aristocrats: Price Appreciation") +
+  scale_y_continuous(labels = scales::percent,breaks = scales::pretty_breaks(n = 10)) +
+  geom_label_repel(aes(ticker, Return_price_app_2020,label = ticker), data=Aristocrats_2020_final[Aristocrats_2020_final$Return_price_app_2020>-0.1447,],arrow = arrow(length = unit(0.01, "npc"), type = "closed", ends = "first"))+
+  geom_hline(yintercept = -0.1447,color = "blue", size=1)+
+  annotate("text", x = 13, y = -0.17, label = "Price Appreciation of SP500 (VOO)")
+```
+
+
+```{R}
+ggplot(Aristocrats_2020_final,aes(x = reorder(ticker, Return_price_app_2020), y = Return_price_app_2020, fill = ticker)) +
+  geom_col(width = .5) +
+  theme(legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")) +
+  labs(x = "", y = "Price Appreciation",title = "2020 (Jan. 02 - Apr. 15) Dividend Aristocrats: Price Appreciation") +
+  scale_y_continuous(labels = scales::percent,breaks = scales::pretty_breaks(n = 10)) +
+  geom_label_repel(aes(ticker, Return_price_app_2020,label = ticker),arrow = arrow(length = unit(0.01, "npc"), type = "closed", ends = "first"))+
+  geom_hline(yintercept = -0.1447,color = "blue", size=1)
+
+```
